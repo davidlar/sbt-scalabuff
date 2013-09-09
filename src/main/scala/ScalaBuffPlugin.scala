@@ -42,13 +42,13 @@ object ScalaBuffPlugin extends Plugin {
       cacheDirectory
     ).map(process),
 
-    sourceGenerators in Compile <+= (scalabuff).task
+    sourceGenerators in Compile <+= (scalabuff).task,
 
-    unpackDependencies <<= unpackDependenciesTask,
+    unpackDependencies <<= unpackDependenciesTask
   )
 
   case class UnpackedDependencies(dir: File, files: Seq[File])
-  
+
   private def process(
     source: File,
     sourceManaged: File,
