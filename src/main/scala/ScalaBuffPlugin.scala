@@ -91,7 +91,7 @@ object ScalaBuffPlugin extends Plugin {
     }
   }
 
-  private def scalabuffUpackDependenciesTask = (streams, managedClasspath in ScalaBuff, externalIncludePath in ScalaBuff) map {
+  private def scalabuffUpackDependenciesTask = (streams, managedClasspath in ScalaBuff, scalabuffExternalIncludePath in ScalaBuff) map {
     (out, deps, extractTarget) =>
       val extractedFiles = unpack(deps.map(_.data), extractTarget, out.log)
       UnpackedDependencies(extractTarget, extractedFiles)
