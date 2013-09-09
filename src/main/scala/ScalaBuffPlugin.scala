@@ -49,7 +49,11 @@ object ScalaBuffPlugin extends Plugin {
 
     scalabuffUnpackDependencies <<= scalabuffUnpackDependenciesTask,
 
-    unmanagedResourceDirectories in Compile += file((sourceDirectory in ScalaBuff).value + "/protobuf")
+    sourceGenerators in Compile <+= (scalabuffUnpackDependencies).task,
+    
+    unmanagedResourceDirectories in Compile += file((sourceDirectory in ScalaBuff).value + "/protobuf"),
+
+    scalabuffArgs += "--generate_json_method"
   )
 
   case class UnpackedDependencies(dir: File, files: Seq[File])
