@@ -45,6 +45,8 @@ object ScalaBuffPlugin extends Plugin {
 
     sourceGenerators in Compile <+= (scalabuff).task,
 
+    scalabuffExternalIncludePath <<= target(_ / "protobuf_external"),
+    
     scalabuffUnpackDependencies <<= scalabuffUnpackDependenciesTask
   )
 
