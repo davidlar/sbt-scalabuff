@@ -13,6 +13,7 @@ object ScalaBuffPlugin extends Plugin {
   val scalabuffArgs = SettingKey[Seq[String]]("scalabuff-args", "Extra command line parameters to scalabuff.")
   val scalabuffMain = SettingKey[String]("scalabuff-main", "ScalaBuff main class.")
   val scalabuffVersion =  SettingKey[String]("scalabuff-version", "ScalaBuff version.")
+  val unpackDependencies = TaskKey[UnpackedDependencies]("scalabuff-unpack-dependencies", "Unpack dependencies.")
 
   lazy val scalabuffSettings = Seq[Project.Setting[_]](
     scalabuffArgs := Seq(),
@@ -42,8 +43,12 @@ object ScalaBuffPlugin extends Plugin {
     ).map(process),
 
     sourceGenerators in Compile <+= (scalabuff).task
+
+    unpackDependencies <<= unpackDependenciesTask,
   )
 
+  case class UnpackedDependencies(dir: File, files: Seq[File])
+  
   private def process(
     source: File,
     sourceManaged: File,
@@ -74,5 +79,20 @@ object ScalaBuffPlugin extends Plugin {
       }
       cached((input ** "*.proto").get.toSet).toSeq
     } else Nil
+  }
+
+  private def unpack(deps: Seq[File], extractTarget: File, log: Logger): Seq[File] = {
+    IO.createDirectory(extractTarget)
+    deps.flatMap { dep =>
+      val seq = IO.unzip(dep, extractTarget, "*.proto").toSeq
+      if (!seq.isEmpty) log.debug("Extracted " + seq.mkString(","))
+      seq
+    }
+  }
+
+  private def unpackDependenciesTask = (streams, managedClasspath in protobufConfig, externalIncludePath in protobufConfig) map {
+    (out, deps, extractTarget) =>
+      val extractedFiles = unpack(deps.map(_.data), extractTarget, out.log)
+      UnpackedDependencies(extractTarget, extractedFiles)
   }
 }
