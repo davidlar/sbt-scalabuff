@@ -13,8 +13,8 @@ object ScalaBuffPlugin extends Plugin {
   val scalabuffArgs = SettingKey[Seq[String]]("scalabuff-args", "Extra command line parameters to scalabuff.")
   val scalabuffMain = SettingKey[String]("scalabuff-main", "ScalaBuff main class.")
   val scalabuffVersion =  SettingKey[String]("scalabuff-version", "ScalaBuff version.")
-  val externalIncludePath = SettingKey[File]("scalabuff-external-include-path", "The path to which scalabuff:library-dependencies are extracted and which is used as scalabuff:include-path for protoc")
-  val unpackDependencies = TaskKey[UnpackedDependencies]("scalabuff-unpack-dependencies", "Unpack dependencies.")
+  val scalabuffExternalIncludePath = SettingKey[File]("scalabuff-external-include-path", "The path to which scalabuff:library-dependencies are extracted and which is used as scalabuff:include-path for protoc")
+  val scalabuffUnpackDependencies = TaskKey[UnpackedDependencies]("scalabuff-unpack-dependencies", "Unpack dependencies.")
 
   lazy val scalabuffSettings = Seq[Project.Setting[_]](
     scalabuffArgs := Seq(),
@@ -45,7 +45,7 @@ object ScalaBuffPlugin extends Plugin {
 
     sourceGenerators in Compile <+= (scalabuff).task,
 
-    unpackDependencies <<= unpackDependenciesTask
+    scalabuffUnpackDependencies <<= scalabuffUnpackDependenciesTask
   )
 
   case class UnpackedDependencies(dir: File, files: Seq[File])
@@ -91,7 +91,7 @@ object ScalaBuffPlugin extends Plugin {
     }
   }
 
-  private def unpackDependenciesTask = (streams, managedClasspath in ScalaBuff, externalIncludePath in ScalaBuff) map {
+  private def scalabuffUpackDependenciesTask = (streams, managedClasspath in ScalaBuff, externalIncludePath in ScalaBuff) map {
     (out, deps, extractTarget) =>
       val extractedFiles = unpack(deps.map(_.data), extractTarget, out.log)
       UnpackedDependencies(extractTarget, extractedFiles)
