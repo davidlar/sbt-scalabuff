@@ -30,10 +30,8 @@ object ScalaBuffPlugin extends Plugin {
 
     managedClasspath in ScalaBuff <<= (classpathTypes, update) map { (ct, report) =>
       Classpaths.managedJars(ScalaBuff, ct, report)
-    },
+    },    
 
-    scalabuff <<= scalabuff.dependsOn(scalabuffUnpackDependencies in ScalaBuff),
-    
     scalabuff <<= (      
       sourceDirectory in ScalaBuff,
       sourceManaged in ScalaBuff,
@@ -45,6 +43,8 @@ object ScalaBuffPlugin extends Plugin {
       cacheDirectory
     ).map(process),
 
+    scalabuff <<= scalabuff.dependsOn(scalabuffUnpackDependencies in ScalaBuff),
+    
     sourceGenerators in Compile <+= (scalabuff).task,
 
     scalabuffExternalIncludePath <<= target(_ / "protobuf_external"),
