@@ -32,7 +32,9 @@ object ScalaBuffPlugin extends Plugin {
       Classpaths.managedJars(ScalaBuff, ct, report)
     },
 
-    scalabuff <<= (
+    scalabuff <<= scalabuff.dependsOn(scalabuffUnpackDependencies in ScalaBuff),
+    
+    scalabuff <<= (      
       sourceDirectory in ScalaBuff,
       sourceManaged in ScalaBuff,
       scalabuffMain in ScalaBuff,
@@ -48,9 +50,7 @@ object ScalaBuffPlugin extends Plugin {
     scalabuffExternalIncludePath <<= target(_ / "protobuf_external"),
 
     scalabuffUnpackDependencies <<= scalabuffUnpackDependenciesTask,
-
-    sourceGenerators in Compile <<= (sourceGenerators in Compile) dependsOn(scalabuffUnpackDependencies),
-
+    
     unmanagedResourceDirectories in Compile += file((sourceDirectory in ScalaBuff).value + "/protobuf"),
 
     scalabuffArgs += "--generate_json_method"
