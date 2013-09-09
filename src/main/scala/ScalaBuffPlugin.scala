@@ -49,8 +49,8 @@ object ScalaBuffPlugin extends Plugin {
 
     scalabuffUnpackDependencies <<= scalabuffUnpackDependenciesTask,
 
-    sourceGenerators in Compile <+= (scalabuffUnpackDependencies).task,
-    
+    sourceGenerators in Compile <<= (sourceGenerators in Compile) dependsOn(scalabuffUnpackDependencies),
+
     unmanagedResourceDirectories in Compile += file((sourceDirectory in ScalaBuff).value + "/protobuf"),
 
     scalabuffArgs += "--generate_json_method"
