@@ -44,7 +44,7 @@ object ScalaBuffPlugin extends Plugin {
     ).map(process),
 
     scalabuff <<= scalabuff.dependsOn(scalabuffUnpackDependencies in ScalaBuff),
-    
+
     sourceGenerators in Compile <+= (scalabuff).task,
 
     scalabuffExternalIncludePath <<= target(_ / "protobuf_external"),
@@ -53,7 +53,8 @@ object ScalaBuffPlugin extends Plugin {
     
     unmanagedResourceDirectories in Compile += file((sourceDirectory in ScalaBuff).value + "/protobuf"),
 
-    scalabuffArgs += "--generate_json_method"
+    scalabuffArgs += "--generate_json_method",
+    scalabuffArgs += "--proto_path=" + scalabuffExternalIncludePath.value.getPath
   )
 
   case class UnpackedDependencies(dir: File, files: Seq[File])
