@@ -54,7 +54,7 @@ object ScalaBuffPlugin extends Plugin {
 
     scalabuffUnpackDependencies <<= scalabuffUnpackDependenciesTask,
     
-    unmanagedResourceDirectories in Compile += scalabuffSourceDir,
+    unmanagedResourceDirectories in Compile += scalabuffSourceDir.value,
 
     scalabuffArgs += "--generate_json_method",
     scalabuffArgs += "--proto_path=" + scalabuffSourceDir.value.getPath,
