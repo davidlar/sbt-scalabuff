@@ -14,7 +14,7 @@ object ScalaBuffPlugin extends Plugin {
   val scalabuffMain = SettingKey[String]("scalabuff-main", "ScalaBuff main class.")
   val scalabuffVersion =  SettingKey[String]("scalabuff-version", "ScalaBuff version.")
   val scalabuffExternalImportPath = SettingKey[File]("scalabuff-external-import-path", "The path to which scalabuff:library-dependencies are extracted")
-  val scalabuffSourceDir = SettingKey[File]("scalabuff-source-path", "The path with the protobuf files")
+  val scalabuffSourceDir = SettingKey[File]("scalabuff-source-dir", "The path with the protobuf files")
   val scalabuffUnpackDependencies = TaskKey[UnpackedDependencies]("scalabuff-unpack-dependencies", "Unpack dependencies.")
 
   lazy val scalabuffSettings = Seq[Project.Setting[_]](
