@@ -27,6 +27,7 @@ object ScalaBuffPlugin extends Plugin {
         "net.sandrogrzicic" %% "scalabuff-runtime" % version
       )
     ),
+    sourceManaged in ScalaBuff <<= (sourceManaged in Compile),
     sourceDirectory in ScalaBuff <<= (sourceDirectory in Compile),
 
     managedClasspath in ScalaBuff <<= (classpathTypes, update) map { (ct, report) =>
